@@ -1,0 +1,245 @@
+<!doctype html>
+<!--
+  TEMPLATE de mockup de validacao (skill gerar-mockup-validacao).
+  Como usar: copie este arquivo para a pasta da demanda como mockup_<slug>.html e
+  preencha as secoes com o CONTEUDO REAL do entregavel (dados semeados do diagnostico,
+  nao lorem). Mantenha o <style> como esta (o design-system da casa). Troque so o miolo.
+  A paleta e neutra; para usar a identidade visual da sua empresa, troque so os valores das
+  CSS vars em :root (e nos blocos de tema escuro), nunca a estrutura.
+
+  Regras duras (nao quebrar):
+  - AUTOCONTIDO: zero dependencia externa (sem CDN, sem fonte remota, sem imagem remota).
+    Tudo inline. Imagem, se precisar, vira data: URI.
+  - TEMA: claro/escuro ja resolvidos por CSS var + o botao "alternar tema".
+  - RESPONSIVO: nada de scroll horizontal no body; tabela larga vai em .tbl-scroll.
+  - SEM SEGREDO / SEM DADO BRUTO: nomes de objeto ASCII; dado pessoal anonimizado;
+    quando o nome for hipotese do padrao (nao o real), marque "ilustrativo" no rodape.
+
+  Blocos disponiveis (use so os que servem ao caso, na ordem que fizer sentido):
+    KPI   .kpi      -> numeros da dor/diagnostico
+    2-col .grid2    -> antes/depois, comparacoes, cards
+    tabela .tbl-scroll+table -> modelo de dados, catalogo, mapa
+    fluxo .flow     -> pipeline / cadeia de etapas horizontais
+    grafo .dag      -> dependencia por colunas (camadas)
+    criterios .crit -> cards de criterio de aceite / requisitos atendidos
+  Cada bloco tem exemplo comentado abaixo.
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITULO}} — mockup de validacao</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --panel:#ffffff; --ink:#1a1d24; --muted:#5b6472; --line:#e2e6ec;
+    --accent:#1f6feb; --accent-soft:#e7f0ff; --good:#1a7f4b; --good-soft:#e4f5ec;
+    --bad:#b3341f; --bad-soft:#fbe8e4; --warn:#8a6d1a; --warn-soft:#fbf3dc;
+    --chip:#eef1f5; --code:#0f1218; --codink:#e6edf3;
+    --z-syn:#6a4bd6; --z-dbx:#c2410c; --z-pbi:#0f766e;
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 6px 20px rgba(16,24,40,.06);
+    --radius:14px; --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0d1017; --panel:#161b22; --ink:#e6edf3; --muted:#9aa4b2; --line:#252c37;
+      --accent:#4f8cf5; --accent-soft:#132135; --good:#4ac585; --good-soft:#10251a;
+      --bad:#f0836b; --bad-soft:#2a1512; --warn:#d9b84a; --warn-soft:#241f0f;
+      --chip:#1c232e; --code:#0a0d12; --codink:#e6edf3; --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1017; --panel:#161b22; --ink:#e6edf3; --muted:#9aa4b2; --line:#252c37;
+    --accent:#4f8cf5; --accent-soft:#132135; --good:#4ac585; --good-soft:#10251a;
+    --bad:#f0836b; --bad-soft:#2a1512; --warn:#d9b84a; --warn-soft:#241f0f;
+    --chip:#1c232e; --code:#0a0d12; --codink:#e6edf3;
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f6f8; --panel:#ffffff; --ink:#1a1d24; --muted:#5b6472; --line:#e2e6ec;
+    --chip:#eef1f5; --code:#0f1218; --codink:#e6edf3; --good-soft:#e4f5ec; --bad-soft:#fbe8e4; --warn-soft:#fbf3dc;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+  header.top{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+  h1{font-size:26px;line-height:1.2;margin:0 0 6px}
+  .sub{color:var(--muted);max-width:70ch;margin:0}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .badge{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--muted);border:1px solid var(--line)}
+  .badge.b-accent{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+  .badge.b-warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+  .themetog{cursor:pointer;font-size:12px;font-weight:600;padding:7px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px;margin-top:22px;box-shadow:var(--shadow)}
+  .sec-h{display:flex;align-items:baseline;gap:10px;margin:0 0 4px}
+  .sec-n{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:700}
+  h2{font-size:19px;margin:0}
+  .sec-lead{color:var(--muted);margin:8px 0 18px;max-width:80ch}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--panel)}
+  .card.bad{border-color:color-mix(in srgb,var(--bad) 40%,var(--line));background:var(--bad-soft)}
+  .card.good{border-color:color-mix(in srgb,var(--good) 40%,var(--line));background:var(--good-soft)}
+  .card h3{margin:0 0 10px;font-size:14px;letter-spacing:.02em;text-transform:uppercase}
+  .card.bad h3{color:var(--bad)} .card.good h3{color:var(--good)}
+  ul.tight{margin:8px 0 0;padding-left:18px} ul.tight li{margin:5px 0}
+  code,.mono{font-family:var(--mono);font-size:.86em}
+  .codeblock{background:var(--code);color:var(--codink);border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.5;margin:0}
+  .codeblock .cm{color:#7d8792} .codeblock .k{color:#79c0ff} .codeblock .s{color:#7ee787} .codeblock .e{color:#f0836b;font-weight:600}
+  .tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:6px}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+  caption{caption-side:top;text-align:left;font-family:var(--mono);font-weight:700;font-size:13px;padding:12px 14px 8px;color:var(--ink)}
+  caption small{font-family:inherit;font-weight:400;color:var(--muted);display:block;margin-top:2px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:var(--chip);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0}
+  tbody tr:last-child td{border-bottom:none}
+  td.mono,th.mono{font-family:var(--mono);font-size:12px}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .pk{background:var(--accent-soft);color:var(--accent)}
+  .fk{background:var(--chip);color:var(--muted)}
+  .p-syn{background:color-mix(in srgb,var(--z-syn) 16%,transparent);color:var(--z-syn)}
+  .p-dbx{background:color-mix(in srgb,var(--z-dbx) 16%,transparent);color:var(--z-dbx)}
+  .p-pbi{background:color-mix(in srgb,var(--z-pbi) 16%,transparent);color:var(--z-pbi)}
+  .yes{color:var(--good);font-weight:700} .no{color:var(--muted)}
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin-top:6px}
+  .flow .node{flex:1 1 150px;min-width:140px;border:1px solid var(--line);border-radius:12px;padding:12px 13px;background:var(--panel)}
+  .flow .node .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);margin-bottom:4px}
+  .flow .node .val{font-family:var(--mono);font-size:12.5px;font-weight:600}
+  .flow .arrow{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:20px;padding:0 8px}
+  @media(max-width:760px){.flow{flex-direction:column}.flow .arrow{transform:rotate(90deg);padding:6px 0}}
+  .dag{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
+  @media(max-width:760px){.dag{grid-template-columns:1fr}}
+  .dag .col{display:flex;flex-direction:column;gap:8px}
+  .dag .col-h{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:700;padding-bottom:4px;border-bottom:1px dashed var(--line)}
+  .dag .box{border:1px solid var(--line);border-radius:9px;padding:7px 9px;font-family:var(--mono);font-size:11.5px;background:var(--panel)}
+  .dag .box small{display:block;color:var(--muted);font-family:inherit;font-size:10.5px;margin-top:2px}
+  .note{font-size:12.5px;color:var(--muted);margin-top:10px;display:flex;gap:8px}
+  .note::before{content:"›";color:var(--accent);font-weight:700}
+  .crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-top:6px}
+  .crit .c{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel)}
+  .crit .c .tag{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700}
+  .crit .c .ti{font-weight:600;margin:3px 0 7px;font-size:13.5px}
+  .crit .c.crit-star{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 20%,transparent) inset}
+  .crit .c .how{font-size:12.5px;color:var(--muted)}
+  .crit .c .ok{font-size:11px;font-weight:700;color:var(--good);margin-top:8px;display:inline-flex;align-items:center;gap:5px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  footer{color:var(--muted);font-size:12.5px;margin-top:26px;text-align:center;line-height:1.7}
+  .kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:4px}
+  .kpi .k{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:var(--panel)}
+  .kpi .k .big{font-size:26px;font-weight:800;line-height:1;color:var(--bad)}
+  .kpi .k.g .big{color:var(--good)}
+  .kpi .k .cap{font-size:11.5px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== CABECALHO (sempre) ===== -->
+  <header class="top">
+    <div>
+      <h1>{{TITULO}}</h1>
+      <p class="sub">{{SUBTITULO: 1-2 linhas do que o mockup valida}}</p>
+      <div class="badges">
+        <span class="badge b-accent">{{FASE/CONTEXTO}}</span>
+        <span class="badge">{{FRENTE}}</span>
+        <span class="badge b-warn">{{GATE: aguardando validacao}}</span>
+      </div>
+    </div>
+    <div class="themetog" onclick="tgl()">alternar tema</div>
+  </header>
+
+  <!-- ===== BLOCO KPI (opcional) — numeros da dor/diagnostico ===== -->
+  <section>
+    <div class="sec-h"><span class="sec-n">01</span><h2>{{TITULO DA SECAO}}</h2></div>
+    <p class="sec-lead">{{lead da secao}}</p>
+    <div class="kpi">
+      <div class="k"><div class="big">{{N}}</div><div class="cap">{{o que esse numero significa}}</div></div>
+      <!-- classe .g no .k pinta o numero de verde (numero "bom") -->
+      <div class="k g"><div class="big">{{N}}</div><div class="cap">{{...}}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== BLOCO ANTES/DEPOIS (opcional) ===== -->
+  <section>
+    <div class="sec-h"><span class="sec-n">02</span><h2>Antes &rarr; Depois</h2></div>
+    <div class="grid2">
+      <div class="card bad">
+        <h3>{{estado atual}}</h3>
+        <pre class="codeblock"><span class="cm">// trecho real do legado</span>
+<span class="e">{{o problema em destaque}}</span></pre>
+        <ul class="tight"><li>{{consequencia}}</li></ul>
+      </div>
+      <div class="card good">
+        <h3>{{proposta}}</h3>
+        <pre class="codeblock"><span class="k">SELECT</span> ...</pre>
+        <ul class="tight"><li>{{ganho}}</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BLOCO TABELA (opcional) — modelo de dados / catalogo / mapa ===== -->
+  <section>
+    <div class="sec-h"><span class="sec-n">03</span><h2>{{titulo}}</h2></div>
+    <p class="sec-lead">{{lead — dizer que os dados sao semeados do diagnostico real}}</p>
+    <div class="tbl-scroll">
+      <table>
+        <caption>{{NOME_DA_TABELA}} <small>{{grao + para que serve}}</small></caption>
+        <thead><tr><th class="mono">{{COL}}</th><th>{{COL}}</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">{{valor}}</td><td><span class="pill p-dbx">{{tag}}</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">{{observacao de leitura}}</div>
+  </section>
+
+  <!-- ===== BLOCO FLUXO (opcional) — etapas horizontais ===== -->
+  <section>
+    <div class="sec-h"><span class="sec-n">04</span><h2>{{titulo}}</h2></div>
+    <div class="flow">
+      <div class="node"><div class="lbl">{{etapa}}</div><div class="val">{{detalhe}}</div></div>
+      <div class="arrow">&rarr;</div>
+      <div class="node"><div class="lbl">{{etapa}}</div><div class="val">{{detalhe}}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== BLOCO GRAFO/DAG (opcional) — dependencia por camadas ===== -->
+  <section>
+    <div class="sec-h"><span class="sec-n">05</span><h2>{{titulo}}</h2></div>
+    <div class="dag">
+      <div class="col">
+        <div class="col-h">{{camada}}</div>
+        <div class="box">{{objeto}} <small>{{dep}}</small></div>
+      </div>
+    </div>
+    <div class="note">{{invariante / decisao destacada}}</div>
+  </section>
+
+  <!-- ===== BLOCO CRITERIOS (opcional) — requisitos atendidos ===== -->
+  <section>
+    <div class="sec-h"><span class="sec-n">06</span><h2>{{Criterios de aceite / requisitos}}</h2></div>
+    <div class="crit">
+      <div class="c"><div class="tag">{{id}}</div><div class="ti">{{criterio}}</div><div class="how">{{onde e atendido}}</div><div class="ok">&#10003; atendido</div></div>
+      <!-- .crit-star destaca o criterio mais critico -->
+      <div class="c crit-star"><div class="tag">{{id}} &middot; mais critico</div><div class="ti">{{...}}</div><div class="how">{{...}}</div><div class="ok">&#10003; atendido</div></div>
+    </div>
+  </section>
+
+  <footer>
+    Mockup de validacao &middot; {{COD DA DEMANDA}} &middot; gerado {{DD-MM-AAAA}}.<br>
+    Registro INTERNO do caderno. Baseado em {{documento de origem}}. {{Se houver nome ilustrativo: "Nomes de objeto X sao ilustrativos do padrao proposto."}}
+  </footer>
+
+</div>
+<script>
+  function tgl(){
+    var r=document.documentElement;
+    var cur=r.getAttribute('data-theme');
+    if(!cur){cur = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark':'light';}
+    r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+  }
+</script>
+</body>
+</html>

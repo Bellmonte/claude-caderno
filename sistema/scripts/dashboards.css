@@ -1,0 +1,526 @@
+/* Sistema visual dos painéis do caderno.
+ *
+ * Injetado a quente pela lib (dv.io.load), então editar aqui e reabrir a nota
+ * já mostra o resultado, sem reiniciar o Obsidian.
+ *
+ * Regra número um: usar as variáveis do tema, nunca cor fixa, para o painel
+ * acompanhar claro/escuro sozinho. As únicas cores próprias são as semânticas,
+ * declaradas uma vez no container raiz.
+ */
+
+/* A nota de dashboard não pode parecer nota: sem título inline, sem bloco de
+ * propriedades e sem o padding do editor, senão nunca vira painel.
+ *
+ * O bloco de propriedades é IRMÃO da área de preview, não filho, então o
+ * seletor descendente a partir de .sc-dash não o alcança. É por isso que
+ * precisa do :has() subindo até o painel da aba. */
+.sc-dash .inline-title,
+.sc-dash .metadata-container,
+.sc-dash .metadata-properties-heading,
+.workspace-leaf-content:has(.sc-dash) .metadata-container,
+.workspace-leaf-content:has(.sc-dash) .metadata-properties-heading,
+.workspace-leaf-content:has(.sc-dash) .inline-title { display: none !important; }
+
+.sc-dash.markdown-preview-view,
+.sc-dash .markdown-preview-view { padding: 0 !important; }
+.sc-dash .markdown-preview-sizer,
+.sc-dash.markdown-preview-view .markdown-preview-sizer {
+  padding: 0 !important;
+  max-width: none !important;
+}
+/* no modo de edição ao vivo o conteúdo tem outra caixa, com a mesma margem */
+.sc-dash .cm-sizer,
+.sc-dash .markdown-source-view.mod-cm6 .cm-contentContainer { max-width: none !important; }
+
+.scd {
+  --scd-late: #e05563;   /* atrasado, parado demais */
+  --scd-warn: #e0a14f;   /* atenção */
+  --scd-done: #4F8FAD;   /* concluído, saudável (acento claro da paleta) */
+  --scd-ev:   #5b9bd8;   /* evento, agendado */
+  padding: 0 18px 48px;
+}
+
+/* --------------------------------------------------------------- tipografia */
+
+.scd-lab {
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .11em;
+  color: var(--text-faint);
+}
+
+/* todo número é monoespaçado e tabular: número tabular não dança ao atualizar,
+ * e é o detalhe que mais faz a tela parecer produto */
+.scd-num {
+  font-family: var(--font-monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 6px;
+  color: var(--text-normal);
+}
+
+/* ------------------------------------------------------------------ cabeçalho */
+
+.scd-topo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 22px 0 18px;
+}
+.scd-saud {
+  font-size: 29px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+.scd-frase {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 4px;
+}
+.scd-data {
+  font-family: var(--font-monospace);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+.scd-data span { display: block; color: var(--text-faint); }
+
+/* ---------------------------------------------------------------- tiles */
+
+.scd-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.scd-tile {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  background: var(--background-secondary);
+  padding: 12px 14px 13px;
+}
+.scd-tile.is-click { cursor: pointer; }
+.scd-tile.is-click:hover { border-color: var(--interactive-accent); }
+.scd-tile-cab { display: flex; align-items: center; gap: 6px; }
+.scd-tile-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.scd-tile.is-alerta {
+  border-color: hsla(var(--accent-h), 70%, 55%, 0);
+  border-color: var(--scd-late);
+  background: color-mix(in srgb, var(--scd-late) 8%, var(--background-secondary));
+}
+.scd-tile.is-alerta .scd-num { color: var(--scd-late); }
+/* espera nao e alarme: usa o azul de evento, que diz "agendado, nao atrasado" */
+.scd-tile.is-espera {
+  border-color: color-mix(in srgb, var(--scd-ev) 40%, var(--background-modifier-border));
+  background: color-mix(in srgb, var(--scd-ev) 6%, var(--background-secondary));
+}
+.scd-tile.is-espera .scd-num { color: var(--scd-ev); }
+/* com tres tiles a faixa fica em tres colunas de verdade, sem o auto-fit
+ * espalhar um quarto card fantasma */
+.scd-tiles { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+.scd-tiles.is-quatro { grid-template-columns: repeat(4, minmax(150px, 1fr)); }
+@media (max-width: 900px) {
+  .scd-tiles,
+  .scd-tiles.is-quatro { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.scd-grade {
+  display: grid;
+  /* minmax(0,...) na primeira coluna impede conteúdo largo de estourar a grade */
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 380px);
+  gap: 16px;
+  align-items: start;
+}
+.scd-col { display: flex; flex-direction: column; gap: 16px; }
+
+/* tres colunas quando a fila e curta: cabe pegar-a-seguir, espera e diario
+ * lado a lado sem nenhum deles ficar magro */
+.scd-grade.is-tres {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(280px, 1fr);
+}
+
+@media (max-width: 1200px) {
+  .scd-grade.is-tres { grid-template-columns: minmax(0, 1fr) minmax(280px, 1fr); }
+}
+@media (max-width: 900px) {
+  .scd-grade,
+  .scd-grade.is-tres { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* card solto na raiz (a faixa da semana) precisa do proprio respiro: dentro das
+ * colunas quem separa e o gap da grade, aqui nao ha grade nenhuma */
+.scd > .scd-card { margin-bottom: 18px; }
+
+/* rodape: o que SAIU daqui na semana, ao lado do que o bau aprendeu */
+.scd-rodape {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-top: 16px;
+}
+@media (max-width: 900px) {
+  .scd-rodape { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ------------------------------------------------------------------ card */
+
+.scd-card {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 14px;
+  background: var(--background-secondary);
+  overflow: hidden;
+}
+.scd-card-cab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+.scd-card-tit { font-size: 13px; font-weight: 600; }
+.scd-card-corpo { padding: 14px 16px; }
+
+.scd-verto {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 999px;
+  padding: 2px 6px 2px 9px;
+  cursor: pointer;
+}
+.scd-verto:hover { color: var(--text-normal); border-color: var(--interactive-accent); }
+
+/* ------------------------------------------------------------------ linha */
+
+.scd-lin {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+.scd-lin:last-child { border-bottom: none; }
+.scd-lin:first-child { padding-top: 0; }
+
+/* faixa colorida por urgência, na borda esquerda */
+.scd-lin.f-late { box-shadow: inset 2px 0 0 var(--scd-late); padding-left: 10px; }
+.scd-lin.f-warn { box-shadow: inset 2px 0 0 var(--scd-warn); padding-left: 10px; }
+.scd-lin.f-ok   { box-shadow: inset 2px 0 0 var(--scd-done); padding-left: 10px; }
+.scd-lin.f-ev   { box-shadow: inset 2px 0 0 var(--scd-ev);   padding-left: 10px; }
+
+.scd-lin-esq { flex: 1; min-width: 0; }
+.scd-lin-tit { font-size: 13px; line-height: 1.35; }
+.scd-lin-tit.is-link { cursor: pointer; }
+.scd-lin-tit.is-link:hover { color: var(--interactive-accent); text-decoration: underline; }
+.scd-lin-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scd-lin-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ------------------------------------------------------------------- chip */
+
+.scd-chip {
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  line-height: 1;
+  padding: 4px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.scd-chip.is-atraso {
+  color: var(--scd-late);
+  border-color: color-mix(in srgb, var(--scd-late) 45%, transparent);
+  background: color-mix(in srgb, var(--scd-late) 10%, transparent);
+}
+.scd-chip.is-proj {
+  color: var(--interactive-accent);
+  border-color: hsla(var(--accent-h), var(--accent-s), var(--accent-l), .45);
+  background: hsla(var(--accent-h), var(--accent-s), var(--accent-l), .12);
+}
+.scd-chip.is-ok {
+  color: var(--scd-done);
+  border-color: color-mix(in srgb, var(--scd-done) 45%, transparent);
+}
+.scd-chip.is-ev {
+  color: var(--scd-ev);
+  border-color: color-mix(in srgb, var(--scd-ev) 45%, transparent);
+  background: color-mix(in srgb, var(--scd-ev) 10%, transparent);
+}
+
+/* ------------------------------------------------------------------ ícones */
+
+.scd-ico { display: inline-flex; align-items: center; color: var(--text-muted); }
+.scd-ico svg { width: 15px; height: 15px; }
+.scd-ico-sm svg { width: 13px; height: 13px; }
+.scd-ico-ac { color: var(--interactive-accent); }
+
+/* ------------------------------------------------------------------ vazio */
+
+.scd-vazio {
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------- barra frente */
+
+.scd-barra {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--background-modifier-border);
+  overflow: hidden;
+  margin-top: 6px;
+}
+.scd-barra i {
+  display: block;
+  height: 100%;
+  background: var(--interactive-accent);
+  border-radius: 999px;
+}
+.scd-barra i.is-late { background: var(--scd-late); }
+
+/* ------------------------------------------------------- placar do cabeçalho */
+
+.scd-placar {
+  display: flex;
+  gap: 22px;
+  align-items: flex-end;
+  margin-bottom: 2px;
+}
+.scd-placar-item { display: flex; align-items: baseline; gap: 6px; }
+.scd-num-sm { font-size: 19px; margin-top: 0; }
+.scd-num-sm.is-ok { color: var(--scd-done); }
+
+/* ----------------------------------------------------------- faixa de frentes */
+
+.scd-frentes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(122px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.scd-frente {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  background: var(--background-secondary);
+  padding: 9px 11px 11px;
+  cursor: pointer;
+}
+.scd-frente:hover { border-color: var(--interactive-accent); }
+.scd-frente-n {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+.scd-frente-sem {
+  font-size: 10.5px;
+  color: var(--scd-late);
+  white-space: nowrap;
+}
+.scd-frente-sem.is-ok { color: var(--text-muted); }
+
+/* --------------------------------------------------------- linha em uma só */
+
+/* código e assunto na mesma linha: empilhar dobrava a altura do painel sem
+ * acrescentar informação */
+.scd-lin-tit {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+}
+.scd-lin-cod {
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  white-space: nowrap;
+  flex: none;
+}
+.scd-lin-sep { color: var(--text-faint); flex: none; }
+.scd-lin-tit .scd-lin-sub { margin-top: 0; flex: 1; min-width: 0; }
+.scd-lin { align-items: center; padding: 7px 0; }
+
+/* ------------------------------------------------- lista da frente clicada */
+
+.scd-frente.is-sel {
+  border-color: var(--interactive-accent);
+  background: hsla(var(--accent-h), var(--accent-s), var(--accent-l), .08);
+}
+.scd-frente-lista {
+  border: 1px solid var(--interactive-accent);
+  border-radius: 14px;
+  background: var(--background-secondary);
+  padding: 4px 16px 12px;
+  margin: -6px 0 16px;
+}
+.scd-frente-lista-cab {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 11px 0 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 4px;
+}
+.scd-frente-lista-cab .scd-verto { margin-left: auto; }
+
+
+/* ------------------------------------------------------------ saude (topo) */
+
+/* o que esta em zero nao merece um tile inteiro: vira pill discreta ao lado do
+ * placar, e a faixa nobre fica para numero que muda */
+.scd-saude { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.scd-pill {
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  letter-spacing: .04em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.scd-pill.is-ok {
+  color: var(--scd-done);
+  border-color: color-mix(in srgb, var(--scd-done) 45%, transparent);
+}
+.scd-pill.is-warn {
+  color: var(--scd-warn);
+  border-color: color-mix(in srgb, var(--scd-warn) 45%, transparent);
+}
+
+/* ----------------------------------------------------------------- semana */
+
+/* cinco colunas de dia, uma tarefa por caixa. E a peca que responde "o que eu
+ * faco agora" e a que ocupa a largura que sobrava com a fila curta. */
+.scd-dias {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.scd-dia {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  padding: 9px 10px 10px;
+  min-height: 104px;
+  background: var(--background-primary);
+}
+.scd-dia.is-hoje {
+  border-color: var(--interactive-accent);
+  background: hsla(var(--accent-h), var(--accent-s), var(--accent-l), .07);
+  box-shadow: inset 0 0 0 1px hsla(var(--accent-h), var(--accent-s), var(--accent-l), .35);
+}
+.scd-dia-cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.scd-dia-sem {
+  font-family: var(--font-monospace);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.scd-dia.is-hoje .scd-dia-sem { color: var(--interactive-accent); font-weight: 700; }
+.scd-dia-data { font-family: var(--font-monospace); font-size: 10px; color: var(--text-faint); }
+
+.scd-tar {
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 5px 7px;
+  border-radius: 7px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  margin-bottom: 6px;
+}
+.scd-tar:last-child { margin-bottom: 0; }
+.scd-tar-quem {
+  display: block;
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+/* fila de chamados nao e tarefa de demanda: tracejada, para nao competir */
+.scd-tar.is-fila { background: transparent; border-style: dashed; }
+.scd-tar.is-feita { opacity: .6; }
+.scd-tar.is-feita .scd-tar-txt { text-decoration: line-through; text-decoration-color: var(--text-faint); }
+.scd-tar.is-feita::before { content: "✓ "; color: var(--scd-done); font-weight: 700; }
+
+@media (max-width: 1100px) {
+  .scd-dias { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --------------------------------------------------------------- entregas */
+
+/* matriz 3x3: nove entregas cabem no card mais largo do rodape sem virar
+ * parede de texto, e o grid mantem as pilulas alinhadas em coluna */
+.scd-ents {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.scd-ent {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* o assunto cede espaco antes do codigo: o codigo e o que identifica a entrega */
+.scd-ent > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 1400px) {
+  .scd-ents { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .scd-ents { grid-template-columns: minmax(0, 1fr); }
+}
+.scd-ent:hover { border-color: var(--interactive-accent); color: var(--text-normal); }
+.scd-ent-cod {
+  font-family: var(--font-monospace);
+  font-size: 11px;
+  color: var(--text-normal);
+}

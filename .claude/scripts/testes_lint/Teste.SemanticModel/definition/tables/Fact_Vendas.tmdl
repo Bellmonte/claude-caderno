@@ -1,0 +1,56 @@
+table Fact_Vendas
+
+	measure 'Crescimento (%)' =
+			
+			VAR v_atual = SUM ( Fact_Vendas[Receita] )
+			VAR v_anterior =
+			    CALCULATE (
+			        SUM ( Fact_Vendas[Receita] ),
+			        DATEADD ( Dim_Calendario[Data], -1, YEAR ),
+			        REMOVEFILTERS ( Dim_Canal )
+			    )
+			RETURN
+			    IF ( ISBLANK ( v_anterior ), BLANK (), ( v_atual - v_anterior ) / v_anterior )
+		formatString: 0.0%
+
+	measure 'Receita (R$)' = SUM ( Fact_Vendas[Receita] )
+		formatString: #,0
+
+	measure 'Cartao HTML' =
+			VAR v_valor = FORMAT ( [Receita (R$)], "#,0", "pt-BR" )
+			RETURN
+			    "<div style='font-family:Segoe UI;font-size:14px;color:#2F6F8F;padding:8px;border-radius:6px'>Receita: " & v_valor & "</div>"
+
+	column Receita
+		dataType: double
+
+	column Custo
+		dataType: double
+
+	column Data
+		dataType: dateTime
+
+	partition Fact_Vendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(
+				        File.Contents(Pasta & "vendas.csv"),
+				        [Delimiter = ",", Columns = 6, Encoding = 65001, QuoteStyle = QuoteStyle.None]
+				    ),
+				    ComCabecalho = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    // a fonte usa ponto como separador decimal
+				    TiposAjustados = Table.TransformColumnTypes(
+				        ComCabecalho,
+				        {
+				            {"id", Int64.Type},
+				            {"data", type date},
+				            {"cliente", type text},
+				            {"valor", type number}
+				        },
+				        "en-US"
+				    ),
+				    Positivas = Table.SelectRows(TiposAjustados, each [valor] > 0),
+				    Renomeadas = Table.RenameColumns(Positivas, {{"valor", "Receita"}})
+				in
+				    Renomeadas

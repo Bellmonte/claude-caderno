@@ -1,0 +1,18 @@
+{
+  "newLinkFormat": "absolute",
+  "useMarkdownLinks": false,
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "conhecimento",
+  "showUnsupportedFiles": true,
+  "userIgnoreFilters": [
+    "local/",
+    ".claude/",
+    ".git/"
+  ],
+  "promptDelete": false,
+  "trashOption": "local",
+  "tabSize": 4,
+  "readableLineLength": false,
+  "strictLineBreaks": true
+}

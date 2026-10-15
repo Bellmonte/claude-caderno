@@ -1,0 +1,224 @@
+<!doctype html>
+<!--
+  TEMPLATE de FLUXO EM RAIAS (skill gerar-mockup-validacao).
+  Irmao do template_mockup.html: aquele e' relatorio de validacao (KPI, tabela, criterios);
+  este e' DIAGRAMA — trilhas paralelas, marcos e transferencia de uma raia para outra.
+
+  Serve para: fluxo de branches (git), pipeline/cadeia de ETL, processo com etapas em
+  ambientes diferentes (dev -> homolog -> prod), jornada com handoff entre areas.
+
+  COMO USAR
+  1. Copie para demandas/<TIPO>/DEM_<COD>/mockup_<slug>.html.
+  2. Troque titulo, rotulos e o miolo do <svg>. O <style> e' o design-system da casa; para usar
+     as cores da sua empresa, mexa so nas CSS vars de :root e do tema claro.
+  3. As coordenadas do SVG estao num grid documentado abaixo — mexa nos numeros, nao no CSS.
+  4. Para PDF ou GIF animado: use o render.py desta pasta (ele resolve as armadilhas
+     de impressao e de captura; ver o cabecalho do script).
+
+  GRID DO SVG (viewBox 0 0 1000 500) — mantenha estes valores para o desenho ficar alinhado:
+    raia 1 (topo):    caixa y=30..245   · trilha principal y=105 · trilha secundaria y=190
+    raia 2 (base):    caixa y=270..485  · trilha principal y=345 · trilha secundaria y=430
+    trilhas correm de x=150 a x=930; o rotulo da trilha fica em x=132 (text-anchor="end")
+    bolinha de evento: r=9 · marco (circulo vazado em volta): r=16
+    ramo que sai e volta: C com 40px de folga (ver os paths de exemplo)
+    rotulo acima da trilha: y da trilha menos 21 · abaixo: y mais 46
+
+  ANIMACAO (opcional): cada elemento que deve APARECER num estagio leva data-s="N".
+  O render.py varre data-stage no <html> e monta o GIF revelando 1..N. Elemento sem
+  data-s aparece desde o primeiro quadro (o cenario).
+
+  REGRAS DURAS (iguais as do template_mockup): autocontido (zero CDN/fonte remota/imagem
+  remota), tema claro/escuro por CSS var, sem scroll horizontal no body, sem segredo e sem
+  dado corporativo bruto. Nome de objeto que ainda nao existe vai marcado como ilustrativo.
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITULO}}</title>
+<style>
+  :root{
+    --bg:#1c1430; --panel:#241a3d; --ink:#f2eefc; --muted:#a99cc9; --line:#3b2f5c;
+    /* cores das raias/trilhas: renomeie conforme o dominio, mantenha 4 no maximo */
+    --t1:#e0b341;      /* trilha principal da raia 1 */
+    --t1b:#e0655f;     /* trilha secundaria da raia 1 */
+    --t2:#3fb98f;      /* trilha principal da raia 2 */
+    --t2b:#7fd7f0;     /* trilha secundaria da raia 2 / destaque da transferencia */
+    --raia1:rgba(224,179,65,.07); --raia2:rgba(63,185,143,.07);
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f5fb; --panel:#ffffff; --ink:#241a3d; --muted:#6b6285; --line:#ddd6ec;
+    --t1:#9a7410; --t1b:#c4423b; --t2:#0f7a56; --t2b:#1d7f9c;
+    --raia1:rgba(154,116,16,.07); --raia2:rgba(15,122,86,.07);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:26px 18px 60px}
+  header{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between}
+  h1{font-size:27px;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0;max-width:64ch}
+  .themetog{cursor:pointer;font-size:12px;font-weight:600;padding:7px 12px;border-radius:9px;
+    background:var(--panel);border:1px solid var(--line);color:var(--muted)}
+
+  /* FAIXA PONTA A PONTA — os passos em uma linha. Rotulo e valor em UMA linha cada
+     (white-space:nowrap), senao um passo mais longo estica a caixa e quebra a simetria.
+     Mantenha rotulo <= 11 e valor <= 13 caracteres. */
+  .passos{display:flex;flex-wrap:nowrap;align-items:stretch;gap:0;margin-top:22px;overflow-x:auto;padding-bottom:2px}
+  .passo{flex:1 1 auto;border:1px solid var(--line);border-radius:11px;padding:11px 10px;background:var(--panel);
+    text-align:center;white-space:nowrap}
+  .passo .l{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .passo .v{font-family:var(--mono);font-size:12px;font-weight:700}
+  .passo.e1{border-left:3px solid var(--t1)} .passo.e1 .v{color:var(--t1)}
+  .passo.e2{border-left:3px solid var(--t2)} .passo.e2 .v{color:var(--t2)}
+  .passo.marco{border:2px solid var(--t2b)}  .passo.marco .v{color:var(--t2b)}
+  .seta{display:flex;align-items:center;justify-content:center;color:var(--muted);padding:0 6px;font-size:15px;flex:0 0 auto}
+  @media(max-width:980px){.passos{flex-direction:column;overflow-x:visible}.passo{text-align:left}.seta{transform:rotate(90deg);padding:5px 0}}
+
+  .board{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:8px 6px 2px;margin-top:20px}
+  svg{display:block;width:100%;height:auto}
+
+  .etapas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  @media(max-width:720px){.etapas{grid-template-columns:1fr}}
+  .et{border:1px solid var(--line);border-radius:13px;padding:15px 16px;background:var(--panel)}
+  .et.a{border-left:3px solid var(--t1)} .et.b{border-left:3px solid var(--t2)}
+  .et .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;
+    font-family:var(--mono);font-size:12px;font-weight:800;color:var(--bg);background:var(--t1)}
+  .et.b .n{background:var(--t2)}
+  .et h2{display:inline;font-size:15px;margin:0 0 0 9px;vertical-align:middle}
+  .et p{color:var(--muted);font-size:13.5px;margin:10px 0 12px}
+  pre{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:9px;margin:0;padding:11px 12px;
+    overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--ink)}
+  :root[data-theme="light"] pre{background:#f3f0fa}
+  pre b{color:var(--t2b);font-weight:700}
+  pre i{color:var(--muted);font-style:normal}
+  footer{color:var(--muted);font-size:12px;margin-top:22px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>{{TITULO}}</h1>
+      <p class="sub">{{uma linha dizendo o que o fluxo resolve}}</p>
+    </div>
+    <div class="themetog" onclick="tgl()">alternar tema</div>
+  </header>
+
+  <!-- PONTA A PONTA: use .e1 para os passos da raia 1, .e2 para a raia 2 e .marco no
+       ponto de virada (o evento que separa as duas etapas). -->
+  <div class="passos">
+    <div class="passo e1"><div class="l">1 · {{rotulo}}</div><div class="v">{{valor}}</div></div>
+    <div class="seta">&rarr;</div>
+    <div class="passo e1"><div class="l">2 · {{rotulo}}</div><div class="v">{{valor}}</div></div>
+    <div class="seta">&rarr;</div>
+    <div class="passo marco"><div class="l">3 · {{virada}}</div><div class="v">{{valor}}</div></div>
+    <div class="seta">&rarr;</div>
+    <div class="passo e2"><div class="l">4 · {{rotulo}}</div><div class="v">{{valor}}</div></div>
+    <div class="seta">&rarr;</div>
+    <div class="passo e2"><div class="l">5 · {{rotulo}}</div><div class="v">{{valor}}</div></div>
+  </div>
+
+  <div class="board">
+  <svg viewBox="0 0 1000 500" role="img" aria-label="{{descricao do diagrama para leitor de tela}}">
+    <defs>
+      <marker id="seta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--t2b)"/>
+      </marker>
+      <style>
+        .trilha{fill:none;stroke-width:3.5;stroke-linecap:round}
+        .ramo{fill:none;stroke-width:3.5;stroke-linecap:round}
+        .bola{stroke:var(--panel);stroke-width:3}
+        .nome{font-family:var(--mono);font-size:14px;font-weight:700}
+        .raialbl{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.04em}
+        .tag{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;font-size:12.5px;fill:var(--muted)}
+        .tagf{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;font-size:12.5px;font-weight:700}
+        .transf{fill:none;stroke:var(--t2b);stroke-width:2.5;stroke-dasharray:7 6}
+        .grupo{fill:none;stroke-width:2;stroke-dasharray:5 4}
+      </style>
+    </defs>
+
+    <!-- ========== RAIA 1 — o que acontece ANTES fica EM CIMA ==========
+         Ordem vertical = ordem no tempo. Inverter isso confunde quem le. -->
+    <rect x="14" y="30" width="972" height="215" rx="14" fill="var(--raia1)" stroke="var(--t1)" stroke-opacity=".35"/>
+    <text x="36" y="55" class="raialbl" fill="var(--t1)">ETAPA 1 · {{NOME DA ETAPA}}</text>
+
+    <text x="132" y="110" class="nome" fill="var(--t1)" text-anchor="end">{{trilha}}</text>
+    <path class="trilha" stroke="var(--t1)" d="M150,105 H930"/>
+    <circle class="bola" cx="190" cy="105" r="9" fill="var(--t1)"/>
+    <circle class="bola" data-s="3" cx="480" cy="105" r="9" fill="var(--t1)"/>
+
+    <!-- ramo que sai da trilha, corre em paralelo e volta -->
+    <text data-s="2" x="132" y="195" class="nome" fill="var(--t1b)" text-anchor="end">{{ramo}}</text>
+    <path data-s="2" class="ramo" stroke="var(--t1b)" d="M250,105 C290,105 290,190 330,190 H400 C440,190 440,105 480,105"/>
+    <circle data-s="2" class="bola" cx="342" cy="190" r="9" fill="var(--t1b)"/>
+    <circle data-s="2" class="bola" cx="390" cy="190" r="9" fill="var(--t1b)"/>
+    <rect  data-s="2" class="grupo" x="318" y="166" width="96" height="48" rx="12" stroke="var(--t1b)"/>
+    <text  data-s="2" x="366" y="236" class="tag" text-anchor="middle">{{o que esse grupo e}}</text>
+
+    <text data-s="2" x="228" y="84" class="tagf" fill="var(--t1b)" text-anchor="middle">{{evento de saida}}</text>
+    <text data-s="3" x="505" y="84" class="tagf" fill="var(--t1)" text-anchor="start">{{evento de volta}}</text>
+
+    <!-- MARCO: o ponto que autoriza a passagem para a raia 2 (circulo vazado) -->
+    <circle data-s="4" cx="620" cy="105" r="16" fill="none" stroke="var(--t2b)" stroke-width="2.5"/>
+    <circle data-s="4" class="bola" cx="620" cy="105" r="9" fill="var(--t1)"/>
+    <text   data-s="4" x="700" y="99" class="tagf" fill="var(--t2b)" text-anchor="start">{{o marco}}</text>
+
+    <!-- ========== RAIA 2 — o que acontece DEPOIS ========== -->
+    <rect x="14" y="270" width="972" height="215" rx="14" fill="var(--raia2)" stroke="var(--t2)" stroke-opacity=".35"/>
+    <text x="36" y="295" class="raialbl" fill="var(--t2)">ETAPA 2 · {{NOME DA ETAPA}}</text>
+
+    <text x="132" y="350" class="nome" fill="var(--t2)" text-anchor="end">{{trilha}}</text>
+    <!-- trilha em DOIS trechos: o vao (686..732) deixa a seta de transferencia passar sem
+         cruzar a linha. Se mover a seta, mova o vao junto. -->
+    <path class="trilha" stroke="var(--t2)" d="M150,345 H686"/>
+    <path class="trilha" stroke="var(--t2)" d="M732,345 H930"/>
+    <circle class="bola" cx="190" cy="345" r="9" fill="var(--t2)"/>
+    <circle data-s="6" class="bola" cx="860" cy="345" r="9" fill="var(--t2)"/>
+
+    <text data-s="5" x="132" y="435" class="nome" fill="var(--t2b)" text-anchor="end">{{ramo}}</text>
+    <path data-s="5" class="ramo" stroke="var(--t2b)" d="M560,345 C600,345 600,430 640,430 H790 C830,430 830,345 860,345"/>
+    <circle data-s="5" class="bola" cx="712" cy="430" r="9" fill="var(--t1b)"/>
+    <circle data-s="5" class="bola" cx="760" cy="430" r="9" fill="var(--t1b)"/>
+    <rect  data-s="5" class="grupo" x="688" y="406" width="96" height="48" rx="12" stroke="var(--t2b)"/>
+    <text  data-s="5" x="736" y="476" class="tag" text-anchor="middle">{{o mesmo grupo, do outro lado}}</text>
+
+    <text data-s="5" x="523" y="324" class="tagf" fill="var(--t2b)" text-anchor="middle">{{evento de saida}}</text>
+    <text data-s="6" x="880" y="324" class="tagf" fill="var(--t2)" text-anchor="start">{{evento final}}</text>
+
+    <!-- TRANSFERENCIA: desce do MARCO ate o grupo copiado. E' a linha que conta a historia:
+         nada passa para a raia 2 antes do marco. -->
+    <path data-s="5" class="transf" marker-end="url(#seta)" d="M620,123 C700,190 700,320 714,400"/>
+    <text data-s="5" x="726" y="240" class="tagf" fill="var(--t2b)" text-anchor="start">{{o que atravessa}}</text>
+  </svg>
+  </div>
+
+  <!-- Um card por etapa: o texto curto + o comando/acao concreta. -->
+  <div class="etapas">
+    <div class="et a">
+      <span class="n">1</span><h2>{{Etapa 1}}</h2>
+      <p>{{uma frase do que acontece aqui}}</p>
+<pre>{{comando ou acao}}</pre>
+    </div>
+    <div class="et b">
+      <span class="n">2</span><h2>{{Etapa 2}}</h2>
+      <p>{{uma frase do que acontece aqui}}</p>
+<pre>{{comando ou acao}}</pre>
+    </div>
+  </div>
+
+  <footer>{{rodape: demanda + data, ou a linha institucional}}</footer>
+
+</div>
+<script>
+  function tgl(){
+    var r=document.documentElement;
+    var cur=r.getAttribute('data-theme') || 'dark';
+    r.setAttribute('data-theme', cur==='dark'?'light':'dark');
+  }
+</script>
+</body>
+</html>

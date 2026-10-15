@@ -1,0 +1,90 @@
+# Segredos / credenciais
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+*secret*
+*token*
+credentials*.json
+.databrickscfg
+
+# Dados brutos / extrações (use `git add -f` para versionar um arquivo seguro)
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.bak
+
+# Exceção pontual: um de-para curado (regra de negócio, não dado bruto) pode ser liberado
+# com escopo estreito, uma demanda e um padrão de nome, e o motivo registrado aqui. Exemplo:
+# !demandas/BI_projetos/DEM_BI-001_exemplo/**/depara_*.csv
+
+# Transcrições cruas de reunião (a ata destilada fica; o raw não)
+# cada reunião tem sua pasta gerencial/reunioes/AAAA-MM-DD-<assunto>/ ; a crua é raw.<ext> dentro
+gerencial/reunioes/**/raw.*
+gerencial/reunioes/**/*-raw.*
+
+# PDF e Word da ata sao artefatos regeneraveis a partir do ata.md (fonte versionada), nao versiona
+gerencial/reunioes/**/*.pdf
+gerencial/reunioes/**/*.docx
+
+# Área local sensível: ignora tudo, mantém só o LEIA-ME.
+# `local/` e `espelho/` sao coisas diferentes e por isso tem regras diferentes:
+# local/ e material BRUTO recebido (planilha do solicitante, extracao, print, PDF),
+# que o Claude nao le nem deve ler; espelho/ e copia de LEITURA do ambiente, fiel
+# ao que esta la, feita justamente para ele consultar (e por isso fora do git).
+local/*
+!local/LEIA-ME.md
+
+# Espelho dos ambientes (fluxos, notebooks, pipelines). Copia regeneravel e pesada:
+# a fonte da verdade e sempre o ambiente. So o LEIA-ME viaja, para a outra maquina
+# saber o que e a pasta e como repovoar.
+espelho/*
+!espelho/LEIA-ME.md
+
+# Pacote local zipado (dado bruto / transporte): fica no disco, fora do git
+/local.zip
+
+# Artefatos brutos exportados do ambiente, guardados na pasta da demanda: contem codigo
+# de producao e ate credencial em texto plano; sao insumo de analise, nunca vao pro git.
+demandas/**/legado/
+
+# Config local do Claude Code (por maquina, nao versiona)
+.claude/settings.local.json
+
+# Sistema / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+__pycache__/
+# Log bruto de acoes do dia (alimenta diario, daily e semanal). E rastro de maquina,
+# regenerado a cada sessao; a narrativa destilada e' que vai pro git.
+diario/.log/
+
+# Obsidian. A configuracao do cofre VIAJA (mesma logica do .claude/): tema, plugins,
+# hotkeys e grafo sao iguais em toda maquina. O que NAO viaja e o estado da
+# janela e o cache, que mudam a cada clique e sujariam todo commit.
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/plugins/*/data.json
+
+# Plugin de terceiro (Dataview e afins): 1,3 MB de codigo compilado que o
+# Obsidian instala e atualiza sozinho. Versionar isso engorda o caderno e
+# congela a versao. Plugin PROPRIO (caderno-nav) continua versionado, porque
+# e nosso e nao existe em loja nenhuma.
+.obsidian/plugins/dataview/
+.trash/
+
+# Material bruto do chamado (especificacao em docx/pdf, prototipo, print que a area
+# mandou). E anexo corporativo, as vezes pesado, e o que importa dele ja esta
+# destilado na solicitacao.md. Fica na pasta da demanda, no disco, fora do git.
+demandas/**/material/
+
+# Painel derivado do estado, regravado pelo hook a cada abertura de sessao. E retrato
+# de um instante numa maquina, como o log bruto; o que atravessa maquinas e o registro
+# destilado. Versionar so geraria conflito e ruido de commit a cada sessao.
+/PAINEL.md

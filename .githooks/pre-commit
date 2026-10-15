@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Trava de segredo: bloqueia o commit se encontrar padroes sensiveis nos arquivos staged.
+# Funciona com o Git Bash (Windows) sem instalar nada extra.
+#
+# Regra: as palavras-chave (secret/token/senha/...) so
+# bloqueiam quando atribuidas a um literal entre aspas com valor alfanumerico.  allowlist-secret
+# Leitura legitima de cofre (secret = client.get_secret(...), dbutils.secrets.get(...)) e
+# referencia a scope (secret_scope = "x") NAO sao segredo e passam. Placeholder da casa
+# (secret = "<SECRET>", Password=<SENHA>) tambem passa. Padroes fortes (chave privada, AWS
+# access key, Password= de connection string com valor) bloqueiam sempre.
+#
+# EXCECAO POR MARCADOR: uma linha que contenha o token `allowlist-secret` e ignorada pela trava.
+# Serve para documentacao/exemplo (este proprio hook, o redator, o runbook), onde a linha PRECISA
+# mostrar o padrao de segredo. Use so em exemplo, nunca para liberar segredo de verdade.
+set -euo pipefail
+
+# Classe de aspas (dupla ou simples), montada fora do padrao para nao brigar com o quoting.
+q="[\"']"
+# Palavras-chave que so viram segredo quando atribuidas a literal entre aspas.
+kw="(password|passwd|senha|secret|client_secret|token|access_token|api[_-]?key)"
+
+# Bloqueia:
+#  - bloco de chave privada PEM
+#  - AWS access key id
+#  - <palavra-chave> [:=] "valor"  (valor comeca com alfanumerico: segredo real e base64/hex/guid;
+#    isso libera placeholder "<...>", f-string "{var}" e rotulo de log "...token:")
+#  - Password=valor de connection string (mesma regra; libera Password=<...>)  allowlist-secret
+patterns="(-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|${kw}${q}?[[:space:]]*[:=][[:space:]]*${q}[A-Za-z0-9]|Password=[A-Za-z0-9])"
+
+files=$(git diff --cached --name-only --diff-filter=ACM || true)
+hit=0
+for f in $files; do
+  # linhas adicionadas que casam o padrao, menos as marcadas como exemplo (allowlist-secret)
+  hits=$(git diff --cached -U0 -- "$f" | grep -nEi "$patterns" | grep -viE 'allowlist-secret' || true)
+  if [ -n "$hits" ]; then
+    echo "  [BLOQUEADO] possivel segredo (literal entre aspas) em: $f"
+    hit=1
+  fi
+done
+
+if [ "$hit" -ne 0 ]; then
+  echo ""
+  echo "Commit bloqueado pela trava de segredo (.githooks/pre-commit)."
+  echo "Troque o valor por um placeholder (<SECRET>/<TOKEN>), leia de cofre, ou mova para local/ (fora do git)."
+  echo "Se for falso positivo e voce tem certeza: git commit --no-verify"
+  exit 1
+fi
+exit 0

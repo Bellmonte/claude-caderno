@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Modelo de relatório longo do caderno, com dados fictícios, tema claro e escuro e todos os componentes do padrão visual.">
+<title>Modelo de Relatório</title>
+<!-- Modelo de relatório longo. Os números e nomes abaixo são FICTÍCIOS e existem só para
+     mostrar cada componente em uso. Para aplicar a identidade da sua empresa, troque os
+     tokens do :root (e os pares do modo escuro), nunca cor solta no meio do CSS.
+     Regra completa em conhecimento/padroes/PADRAO_VISUAL_REPORTE.md. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --ground:#F6F7F9;
+  --surface:#FFFFFF;
+  --surface-2:#EEF1F4;
+  --ink:#1A2230;
+  --ink-2:#3D4757;
+  --muted:#6B7585;
+  --line:#DDE2E8;
+  --line-strong:#C5CCD5;
+  --acento:#2F6F8F;
+  --acento-claro:#4F8FAD;
+  --acento-wash:#E3EEF3;
+  --ambar:#9A6B10;
+  --ambar-wash:#F6EEDC;
+  --terra:#B23A2B;
+  --terra-wash:#F7E6E3;
+  --shadow:0 1px 2px rgba(26,34,48,.05),0 8px 24px -16px rgba(26,34,48,.28);
+
+  --sans:"Inter","Segoe UI",system-ui,sans-serif;
+  --display:"Inter","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F141A;
+    --surface:#161D25;
+    --surface-2:#1D2630;
+    --ink:#E4E9EF;
+    --ink-2:#BAC4CF;
+    --muted:#8A95A3;
+    --line:#263140;
+    --line-strong:#364354;
+    --acento:#7DB3CC;
+    --acento-claro:#9CC6D9;
+    --acento-wash:#172832;
+    --ambar:#D6A74A;
+    --ambar-wash:#2A2317;
+    --terra:#E0796A;
+    --terra-wash:#2B1A17;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F141A;
+  --surface:#161D25;
+  --surface-2:#1D2630;
+  --ink:#E4E9EF;
+  --ink-2:#BAC4CF;
+  --muted:#8A95A3;
+  --line:#263140;
+  --line-strong:#364354;
+  --acento:#7DB3CC;
+  --acento-claro:#9CC6D9;
+  --acento-wash:#172832;
+  --ambar:#D6A74A;
+  --ambar-wash:#2A2317;
+  --terra:#E0796A;
+  --terra-wash:#2B1A17;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 96px}
+
+/* ── Cabeçalho ───────────────────────────────────────────── */
+.top{
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,var(--acento-wash) 0%,transparent 100%);
+}
+.top-inner{max-width:1040px;margin:0 auto;padding:56px 28px 40px;display:flex;flex-direction:column;gap:20px}
+.brandline{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--display);font-size:.72rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--acento);
+}
+.brandline::after{content:"";flex:1;height:1px;background:var(--line-strong)}
+h1{
+  font-family:var(--display);font-weight:700;font-size:clamp(2.1rem,5vw,3.1rem);
+  line-height:1.06;letter-spacing:-.02em;margin:0;text-wrap:balance;
+}
+.dek{max-width:62ch;color:var(--ink-2);font-size:1.05rem;margin:0}
+.meta-row{
+  display:flex;flex-wrap:wrap;gap:10px 28px;padding-top:8px;
+  font-size:.85rem;color:var(--muted);
+}
+.meta-row b{font-family:var(--display);font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* ── Seções ──────────────────────────────────────────────── */
+section{padding-top:64px}
+.eyebrow{
+  font-family:var(--display);font-size:.7rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acento);margin:0 0 10px;
+}
+h2{
+  font-family:var(--display);font-weight:700;font-size:1.72rem;letter-spacing:-.015em;
+  margin:0 0 6px;padding-bottom:14px;border-bottom:2px solid var(--ink);text-wrap:balance;
+}
+h3{
+  font-family:var(--display);font-weight:600;font-size:1.06rem;letter-spacing:-.005em;
+  margin:38px 0 12px;
+}
+p{margin:0 0 14px;max-width:70ch}
+.lead{font-size:1.02rem;color:var(--ink-2);margin-top:18px}
+small,.note{font-size:.82rem;color:var(--muted);line-height:1.55}
+.note{display:block;margin-top:10px;max-width:74ch}
+
+/* ── KPIs ────────────────────────────────────────────────── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:14px;margin:26px 0 10px}
+.kpi{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  padding:18px 18px 16px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:4px;
+}
+.kpi .n{
+  font-family:var(--display);font-weight:700;font-size:2.05rem;line-height:1;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums;
+}
+.kpi .n .u{font-size:.95rem;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:3px}
+.kpi .k{
+  font-family:var(--display);font-size:.68rem;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--muted);
+}
+.kpi .s{font-size:.8rem;color:var(--muted);line-height:1.45}
+.kpi.alert{border-left:3px solid var(--terra)}
+.kpi.warn{border-left:3px solid var(--ambar)}
+.kpi.good{border-left:3px solid var(--acento-claro)}
+
+/* ── Tabelas ─────────────────────────────────────────────── */
+.tablewrap{overflow-x:auto;margin:20px 0 6px;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:520px}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line)}
+thead th{
+  font-family:var(--display);font-size:.67rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);background:var(--surface-2);
+  border-bottom:1px solid var(--line-strong);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr.total td{font-weight:700;background:var(--surface-2);font-family:var(--display)}
+.nm{font-weight:600}
+.dim{color:var(--muted)}
+
+/* ── Barras ──────────────────────────────────────────────── */
+.bars{display:flex;flex-direction:column;gap:7px;margin:20px 0 6px}
+.bar{display:grid;grid-template-columns:minmax(120px,215px) 1fr minmax(58px,auto);align-items:center;gap:14px}
+.bar .lb{font-size:.85rem;line-height:1.3}
+.bar .tr{height:19px;background:var(--surface-2);border-radius:2px;overflow:hidden}
+.bar .fl{height:100%;background:var(--acento);border-radius:2px}
+.bar .fl.alt{background:var(--acento-claro)}
+.bar .fl.warn{background:var(--ambar)}
+.bar .fl.crit{background:var(--terra)}
+.bar .vl{font-family:var(--display);font-weight:600;font-size:.83rem;font-variant-numeric:tabular-nums;text-align:right}
+
+/* ── Gráfico de colunas ──────────────────────────────────── */
+.chartbox{margin:22px 0 6px;border:1px solid var(--line);border-radius:3px;background:var(--surface);padding:22px 20px 14px;overflow-x:auto}
+.cols{display:flex;align-items:flex-end;gap:16px;height:190px;min-width:460px}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px;height:100%}
+.col .stack{width:100%;max-width:74px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%}
+.col .v{font-family:var(--display);font-weight:700;font-size:.85rem;font-variant-numeric:tabular-nums}
+.col .b{width:100%;background:var(--acento);border-radius:2px 2px 0 0;min-height:3px}
+.col.partial .b{background:repeating-linear-gradient(135deg,var(--acento) 0 5px,var(--acento-wash) 5px 10px);border:1px solid var(--acento)}
+.col .x{font-size:.73rem;color:var(--muted);text-align:center;line-height:1.3;font-variant-numeric:tabular-nums}
+.axisnote{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:12px;padding-top:9px;font-size:.76rem;color:var(--muted)}
+
+/* ── Concentração ────────────────────────────────────────── */
+.conc{display:flex;height:44px;border-radius:3px;overflow:hidden;margin:20px 0 8px;border:1px solid var(--line)}
+.conc div{display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:.78rem;color:#fff;text-align:center;padding:0 4px}
+.conc .c1{background:var(--terra)}
+.conc .c2{background:var(--ambar)}
+.conc .c3{background:var(--acento)}
+.conc .c4{background:var(--muted)}
+.conclegend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.8rem;color:var(--ink-2)}
+.conclegend span{display:flex;align-items:center;gap:7px}
+.dot{width:10px;height:10px;border-radius:2px;flex:none}
+
+/* ── Callouts ────────────────────────────────────────────── */
+.callout{
+  border:1px solid var(--line);border-left:3px solid var(--acento);
+  background:var(--surface);border-radius:3px;padding:18px 20px;margin:24px 0;
+}
+.callout.warn{border-left-color:var(--ambar);background:var(--ambar-wash)}
+.callout.crit{border-left-color:var(--terra);background:var(--terra-wash)}
+.callout h4{
+  font-family:var(--display);font-size:.72rem;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;margin:0 0 8px;color:var(--acento);
+}
+.callout.warn h4{color:var(--ambar)}
+.callout.crit h4{color:var(--terra)}
+.callout p:last-child{margin-bottom:0}
+
+/* ── Achados ─────────────────────────────────────────────── */
+.findings{display:flex;flex-direction:column;gap:0;margin:26px 0 0;border-top:1px solid var(--line)}
+.finding{display:grid;grid-template-columns:auto 1fr;gap:18px;padding:18px 2px;border-bottom:1px solid var(--line);align-items:baseline}
+.finding .fig{
+  font-family:var(--display);font-weight:700;font-size:1.55rem;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;min-width:104px;line-height:1.1;
+}
+.finding .fig.crit{color:var(--terra)}
+.finding .fig.warn{color:var(--ambar)}
+.finding .fig.good{color:var(--acento)}
+.finding .tx{font-size:.95rem;line-height:1.55;color:var(--ink-2)}
+.finding .tx b{color:var(--ink);font-weight:600}
+
+/* ── Chips / tags ────────────────────────────────────────── */
+.chip{
+  display:inline-block;font-family:var(--display);font-size:.66rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:2px;white-space:nowrap;
+}
+.chip.ok{background:var(--acento-wash);color:var(--acento)}
+.chip.mid{background:var(--ambar-wash);color:var(--ambar)}
+.chip.bad{background:var(--terra-wash);color:var(--terra)}
+.chip.off{background:var(--surface-2);color:var(--muted)}
+
+/* ── Listas ──────────────────────────────────────────────── */
+ul.tight{margin:12px 0 14px;padding-left:20px;max-width:72ch}
+ul.tight li{margin-bottom:7px}
+ol.recs{margin:20px 0 0;padding:0;list-style:none;counter-reset:r;display:flex;flex-direction:column;gap:14px}
+ol.recs li{
+  counter-increment:r;display:grid;grid-template-columns:auto 1fr;gap:16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:16px 18px;
+}
+ol.recs li::before{
+  content:counter(r);font-family:var(--display);font-weight:700;font-size:.95rem;
+  color:var(--acento);background:var(--acento-wash);border-radius:2px;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+}
+ol.recs b{font-family:var(--display);font-weight:600;display:block;margin-bottom:3px;color:var(--ink)}
+ol.recs .why{font-size:.88rem;color:var(--ink-2);line-height:1.5}
+
+.quote{
+  border-left:2px solid var(--line-strong);padding:2px 0 2px 16px;margin:0 0 12px;
+  font-size:.9rem;color:var(--ink-2);font-style:italic;max-width:72ch;
+}
+.quote cite{display:block;font-style:normal;font-size:.78rem;color:var(--muted);margin-top:4px}
+
+footer{margin-top:72px;padding-top:26px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+footer b{font-family:var(--display);color:var(--ink-2)}
+
+@media (max-width:640px){
+  .wrap,.top-inner{padding-left:16px;padding-right:16px}
+  .bar{grid-template-columns:1fr;gap:4px}
+  .bar .vl{text-align:left}
+  .finding{grid-template-columns:1fr;gap:4px}
+}
+</style>
+<style>*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}img{max-width:100%;height:auto}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.92em}</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brandline">Sua empresa &middot; Relatório de uso</div>
+    <h1>Adoção da ferramenta interna</h1>
+    <p class="dek">Exemplo de relatório longo com dados fictícios: quem usa, quanto usa, o que pede e onde a resposta falha. Troque o conteúdo e mantenha a estrutura.</p>
+    <div class="meta-row">
+      <span>Janela observada <b>01/03 – 31/03/2026</b></span>
+      <span>Interações <b>480</b></span>
+      <span>Sessões <b>190</b></span>
+      <span>Usuários cadastrados <b>30</b></span>
+      <span>Emitido em <b>02/04/2026</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ════════ SUMÁRIO ════════ -->
+<section id="sumario">
+  <p class="eyebrow">Sumário executivo</p>
+  <h2>Quatro leituras que definem o ciclo</h2>
+  <div class="findings">
+    <div class="finding">
+      <div class="fig crit">60%</div>
+      <div class="tx">do volume vem de <b>5 pessoas</b>. Qualquer média simples da ferramenta está descrevendo esse grupo, e não a empresa inteira.</div>
+    </div>
+    <div class="finding">
+      <div class="fig warn">12&nbsp;→&nbsp;8</div>
+      <div class="tx">usuários ativos por semana, do primeiro ao último ciclo completo. O volume oscila, mas a <b>base de pessoas encolhe</b> de forma consistente.</div>
+    </div>
+    <div class="finding">
+      <div class="fig">30%</div>
+      <div class="tx">dos cadastrados <b>nunca abriram uma conversa</b>. Entraram, olharam e não usaram.</div>
+    </div>
+    <div class="finding">
+      <div class="fig good">72%</div>
+      <div class="tx">de aprovação nas mensagens avaliadas. A queixa dominante entre as negativas é <b>número divergente do painel oficial</b>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ ADOÇÃO ════════ -->
+<section id="adocao">
+  <p class="eyebrow">Adoção</p>
+  <h2>Quem está dentro e quem só passou pela porta</h2>
+  <p class="lead">Dos 30 cadastros ativos, 21 chegaram a usar a ferramenta. Os outros 9 têm acesso registrado, mas nenhuma mensagem, e o funil perde quase um terço das pessoas entre o acesso e o primeiro uso real.</p>
+
+  <div class="kpis">
+    <div class="kpi"><span class="k">Cadastrados</span><span class="n">30</span><span class="s">Inclui 1 conta de serviço</span></div>
+    <div class="kpi good"><span class="k">Já usaram</span><span class="n">21 <span class="u">/ 70%</span></span><span class="s">Ao menos 1 interação no período</span></div>
+    <div class="kpi alert"><span class="k">Nunca usaram</span><span class="n">9 <span class="u">/ 30%</span></span><span class="s">Acessaram, mas não abriram conversa</span></div>
+    <div class="kpi warn"><span class="k">Ativos na última semana</span><span class="n">8</span><span class="s">Semana completa</span></div>
+  </div>
+
+  <h3>Perfil de recorrência</h3>
+  <p>Classificação por número de semanas distintas com pelo menos uma interação. Mede constância, e não volume.</p>
+  <div class="bars">
+    <div class="bar"><span class="lb">Recorrente <span class="dim">(3+ semanas)</span></span><span class="tr"><span class="fl" style="width:66.7%"></span></span><span class="vl">6</span></div>
+    <div class="bar"><span class="lb">Ocasional <span class="dim">(2 semanas)</span></span><span class="tr"><span class="fl alt" style="width:88.9%"></span></span><span class="vl">8</span></div>
+    <div class="bar"><span class="lb">Experimentou <span class="dim">(1 semana)</span></span><span class="tr"><span class="fl warn" style="width:77.8%"></span></span><span class="vl">7</span></div>
+    <div class="bar"><span class="lb">Nunca usou</span><span class="tr"><span class="fl crit" style="width:100%"></span></span><span class="vl">9</span></div>
+  </div>
+
+  <h3>Adoção por área</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>Área</th><th class="num">Cad.</th><th class="num">Usaram</th><th class="num">Ativação</th>
+        <th class="num">Interações</th><th class="num">% do total</th><th class="num">Mediana/pessoa</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="nm">Área A</td><td class="num">12</td><td class="num">9</td><td class="num">75%</td><td class="num">290</td><td class="num">60,4%</td><td class="num">22</td></tr>
+        <tr><td class="nm">Área B</td><td class="num">8</td><td class="num">6</td><td class="num">75%</td><td class="num">120</td><td class="num">25,0%</td><td class="num">18</td></tr>
+        <tr><td class="nm">Área C</td><td class="num">6</td><td class="num">4</td><td class="num">67%</td><td class="num">55</td><td class="num">11,5%</td><td class="num">12</td></tr>
+        <tr><td class="nm">Sem área</td><td class="num">4</td><td class="num">2</td><td class="num">50%</td><td class="num">15</td><td class="num">3,1%</td><td class="num">7</td></tr>
+        <tr class="total"><td>Total</td><td class="num">30</td><td class="num">21</td><td class="num">70%</td><td class="num">480</td><td class="num">100%</td><td class="num">16</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">A coluna decisiva é a taxa de ativação. Área com uma única pessoa cadastrada infla ou desinfla qualquer média, então ela vale mais que o total de interações.</p>
+
+  <div class="callout crit">
+    <h4>Cadastrados que nunca usaram</h4>
+    <p>Liste aqui por área, sem nome de pessoa quando o relatório sair do time. Vale entender se a causa é permissão, descoberta ou utilidade percebida, porque cada uma pede um remédio diferente.</p>
+  </div>
+</section>
+
+<!-- ════════ VOLUME ════════ -->
+<section id="volume">
+  <p class="eyebrow">Volume</p>
+  <h2>480 interações, concentradas e em queda</h2>
+
+  <h3>Distribuição semanal</h3>
+  <div class="chartbox">
+    <div class="cols">
+      <div class="col"><div class="stack"><span class="v">110</span><span class="b" style="height:73%"></span></div><span class="x">S1<br><span class="dim">12 ativos</span></span></div>
+      <div class="col"><div class="stack"><span class="v">150</span><span class="b" style="height:100%"></span></div><span class="x">S2<br><span class="dim">11 ativos</span></span></div>
+      <div class="col"><div class="stack"><span class="v">120</span><span class="b" style="height:80%"></span></div><span class="x">S3<br><span class="dim">9 ativos</span></span></div>
+      <div class="col"><div class="stack"><span class="v">80</span><span class="b" style="height:53%"></span></div><span class="x">S4<br><span class="dim">8 ativos</span></span></div>
+      <div class="col partial"><div class="stack"><span class="v">20</span><span class="b" style="height:13%"></span></div><span class="x">S5<br><span class="dim">parcial</span></span></div>
+    </div>
+    <div class="axisnote"><span>Interações por semana ISO</span><span>Coluna hachurada = semana incompleta</span></div>
+  </div>
+
+  <div class="callout warn">
+    <h4>Acesso sem uso</h4>
+    <p>Toda semana um punhado de pessoas entra na ferramenta e sai sem perguntar nada. O registro de acesso mostra mais gente do que o registro de conversa.</p>
+  </div>
+
+  <h3>Por recurso</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Recurso</th><th class="num">Interações</th><th class="num">%</th><th class="num">Usuários</th><th class="num">Latência mediana</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td class="nm">Consulta de dados</td><td class="num">220</td><td class="num">45,8%</td><td class="num">15</td><td class="num">40 s</td><td><span class="chip ok">Produção</span></td></tr>
+        <tr><td class="nm">Chat geral</td><td class="num">180</td><td class="num">37,5%</td><td class="num">14</td><td class="num">30 s</td><td><span class="chip ok">Produção</span></td></tr>
+        <tr><td class="nm">Documentação</td><td class="num">60</td><td class="num">12,5%</td><td class="num">6</td><td class="num">20 s</td><td><span class="chip mid">Piloto</span></td></tr>
+        <tr><td class="nm">Prova de conceito</td><td class="num">20</td><td class="num">4,2%</td><td class="num">2</td><td class="num">90 s</td><td><span class="chip off">Experimental</span></td></tr>
+        <tr class="total"><td>Total</td><td class="num">480</td><td class="num">100%</td><td class="num">21</td><td class="num">—</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ════════ MÉTODO ════════ -->
+<section id="media">
+  <p class="eyebrow">Método</p>
+  <h2>Como medir &ldquo;média por usuário&rdquo; sem se enganar</h2>
+  <p class="lead">Com 21 usuários ativos e 480 interações, a média dá <b>22,9 interações por pessoa</b>, um número que não descreve ninguém. A pessoa típica fez 16, e a que mais usou fez 150.</p>
+
+  <h3>A concentração, em uma barra</h3>
+  <div class="conc">
+    <div class="c1" style="flex:31">31%</div>
+    <div class="c2" style="flex:29">29%</div>
+    <div class="c3" style="flex:32">32%</div>
+    <div class="c4" style="flex:8">8%</div>
+  </div>
+  <div class="conclegend">
+    <span><i class="dot" style="background:var(--terra)"></i>1º usuário</span>
+    <span><i class="dot" style="background:var(--ambar)"></i>2º ao 5º</span>
+    <span><i class="dot" style="background:var(--acento)"></i>6º ao 15º</span>
+    <span><i class="dot" style="background:var(--muted)"></i>16º ao 21º</span>
+  </div>
+
+  <h3>Comparando os candidatos a &ldquo;média&rdquo;</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Métrica</th><th class="num">Valor</th><th>O que ela realmente diz</th><th>Uso recomendado</th></tr></thead>
+      <tbody>
+        <tr><td class="nm">Média aritmética<br><small>total ÷ usuários ativos</small></td><td class="num">22,9</td><td>Puxada por um único usuário intenso.</td><td><span class="chip bad">Não usar</span></td></tr>
+        <tr><td class="nm">Mediana</td><td class="num">16</td><td>O usuário do meio, imune a outlier.</td><td><span class="chip ok">Métrica principal</span></td></tr>
+        <tr><td class="nm">Quartis (p25 / p75)</td><td class="num">7 / 26</td><td>A faixa real em que metade dos usuários está.</td><td><span class="chip ok">Sempre junto</span></td></tr>
+        <tr><td class="nm">Gini</td><td class="num">0,52</td><td>Resume a desigualdade num número comparável mês a mês.</td><td><span class="chip mid">Tendência</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h4>Recomendação para o painel de acompanhamento</h4>
+    <p>Trocar o card de média por quatro números sempre juntos: <b>mediana</b>, <b>p25–p75</b>, <b>% do top 5</b> e <b>usuários ativos na semana</b>.</p>
+  </div>
+</section>
+
+<!-- ════════ FEEDBACK ════════ -->
+<section id="feedback">
+  <p class="eyebrow">Feedback</p>
+  <h2>O que os usuários escreveram</h2>
+  <div class="quote">&ldquo;O total que a ferramenta devolveu não bate com o que eu vejo no painel oficial.&rdquo;<cite>Usuário da Área A · Consulta de dados · relato fictício</cite></div>
+  <div class="quote">&ldquo;Quatro minutos é muito tempo para uma pergunta simples.&rdquo;<cite>Usuário da Área B · Chat geral · relato fictício</cite></div>
+</section>
+
+<!-- ════════ RECOMENDAÇÕES ════════ -->
+<section id="recs">
+  <p class="eyebrow">Ações sugeridas</p>
+  <h2>O que fazer com isso</h2>
+  <ol class="recs">
+    <li><div><b>Trocar o card de média por mediana e faixa</b><span class="why">A média não descreve nenhum usuário e leva a decisão errada sobre a base inteira.</span></div></li>
+    <li><div><b>Investigar quem nunca usou</b><span class="why">Todos acessaram. Descobrir se é permissão, descoberta ou utilidade percebida.</span></div></li>
+    <li><div><b>Atacar a divergência com o painel oficial</b><span class="why">É a queixa dominante e o maior risco de perda de confiança.</span></div></li>
+  </ol>
+</section>
+
+<!-- ════════ METODOLOGIA ════════ -->
+<section id="metodo">
+  <p class="eyebrow">Metodologia</p>
+  <h2>Como estes números foram apurados</h2>
+  <ul class="tight">
+    <li><b>Fonte:</b> descreva a base, o esquema e as tabelas lidas, sempre em consulta somente de leitura.</li>
+    <li><b>Interação</b> = um par pergunta e resposta. <b>Sessão</b> = uma conversa aberta.</li>
+    <li><b>Usuário ativo na semana</b> = pelo menos uma interação na semana ISO, de segunda a domingo.</li>
+  </ul>
+
+  <h3>Limitações que afetam a leitura</h3>
+  <ul class="tight">
+    <li>A última semana é parcial e está marcada como tal no gráfico.</li>
+    <li>Poucas interações foram avaliadas; as taxas de aprovação valem como sinal, e não como medida.</li>
+  </ul>
+</section>
+
+<footer>
+  <p><b>Adoção da ferramenta interna</b> · Janela 01/03/2026 – 31/03/2026 · Emitido em 02/04/2026<br>
+  Modelo com dados fictícios. Relatório real com nome de pessoa é de distribuição interna.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+table Ruim_M
+
+	partition Ruim_M = m
+		mode: import
+		source =
+				let
+				Fonte = Csv.Document(File.Contents(Pasta&"vendas.csv"),[Delimiter=","]), // origem
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    Filtradas = Table.SelectRows(#"Cabeçalhos Promovidos", each [valor] > 0 and
+				        [cliente] <> null),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Filtradas, {{"id", Int64.Type}, {"data", type date}, {"cliente", type text}, {"valor", type number}}),
+				    Ordenadas = Table.Sort(
+				        #"Tipo Alterado", {{"data", Order.Ascending}}),
+				    Final = Ordenadas
+				    , Extra = Final
+				  in #"Tipo Alterado"

@@ -1,0 +1,4 @@
+table Dim_Cliente
+
+	column Nome
+		dataType: string

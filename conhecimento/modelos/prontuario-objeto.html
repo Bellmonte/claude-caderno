@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prontuário do Objeto</title>
+<!-- Exemplar do prontuário de objeto em HTML, com dados FICTÍCIOS. Copie a estrutura e troque
+     os dados; a fonte continua sendo gerencial/objetos/<objeto>.md. Paleta neutra do
+     PADRAO_VISUAL_REPORTE: troque os tokens do :root pela identidade da sua empresa. -->
+<style>
+  :root{
+    --brand:#2F6F8F; --brand-soft:#4F8FAD; --bg:#F6F7F9; --txt:#1A2230;
+    --muted:#6B7585; --line:#DDE2E8; --zebra:#F2F4F7; --hl:#E3EEF3; --hl2:#CFE1EA;
+    --amb:#9A6B10; --ambbg:#F6EEDC; --on-brand:#FFFFFF; --on-brand-soft:#D6E6EE;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:"Inter","Segoe UI", system-ui, -apple-system, sans-serif;
+    background:var(--bg); color:var(--txt);
+    font-size:13px; line-height:1.45;
+  }
+  .page{max-width:960px; margin:0 auto; padding:32px 28px 40px;}
+  h1{font-size:24px; color:var(--brand); margin-bottom:4px;}
+  .sub{font-size:11.5px; color:var(--muted); margin-bottom:16px;}
+  h2{font-size:15px; color:var(--brand); margin:22px 0 8px;}
+
+  /* KPIs */
+  .kpis{display:grid; grid-template-columns:repeat(4,1fr); background:var(--brand); border-radius:6px; overflow:hidden;}
+  .kpi{padding:12px 14px; border-right:1px solid var(--brand-soft);}
+  .kpi:last-child{border-right:none;}
+  .kpi .v{color:var(--on-brand); font-size:26px; font-weight:700; line-height:1.1;}
+  .kpi .l{color:var(--on-brand-soft); font-size:11px; margin-top:3px;}
+
+  /* Tabelas */
+  .tablewrap{overflow-x:auto;}
+  table{width:100%; border-collapse:collapse; background:#fff; border-radius:6px; overflow:hidden;}
+  th{background:var(--brand); color:var(--on-brand); text-align:left; font-size:11.5px; padding:7px 9px;}
+  td{padding:7px 9px; border-bottom:1px solid var(--line); font-size:12px; vertical-align:top;}
+  tbody tr:nth-child(even) td{background:var(--zebra);}
+  td.b, .b{font-weight:600;}
+  td.mono{font-family:Consolas, "Courier New", monospace; font-size:11px; color:var(--muted);}
+  tr.rel td{background:var(--hl) !important;}
+  tr.hist td{background:var(--hl2) !important;}
+  tr.rel td.b, tr.hist td.b{font-weight:600;}
+
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+  .two-col h2{margin-top:0;}
+
+  /* Pontos de atenção */
+  .atencao{background:var(--ambbg); border-left:4px solid var(--amb); border-radius:0 6px 6px 0; padding:10px 14px;}
+  .atencao ul{list-style:none;}
+  .atencao li{padding:5px 0 5px 14px; position:relative; font-size:12.5px;}
+  .atencao li::before{content:"•"; position:absolute; left:0; color:var(--amb); font-weight:700;}
+
+  .nota{font-size:11px; color:var(--muted); margin-top:8px;}
+
+  @media (max-width:720px){
+    .page{padding:24px 16px 32px;}
+    .two-col{grid-template-columns:1fr;}
+    .kpis{grid-template-columns:repeat(2,1fr);}
+    .kpi:nth-child(2){border-right:none;}
+    .kpi:nth-child(1), .kpi:nth-child(2){border-bottom:1px solid var(--brand-soft);}
+  }
+  @media print{
+    body{background:#fff;}
+    .page{padding:0; max-width:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Metadados de Desenvolvimento: Painel de Vendas (exemplo)</h1>
+  <p class="sub">Fonte: histórico de atualizações do repositório de dashboards, complementado por relato do desenvolvedor. Dados fictícios. Gerado em 15/04/2026.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v">44%</div><div class="l">taxa de retrabalho<br>4 retornos em 9 entregas</div></div>
+    <div class="kpi"><div class="v">4</div><div class="l">ciclos de retorno<br>de validação</div></div>
+    <div class="kpi"><div class="v">30 dias</div><div class="l">homologação formal<br>2 devoluções em 3 entregas</div></div>
+    <div class="kpi"><div class="v">90 dias</div><div class="l">desenvolvimento total<br>15/01 a 15/04/2026</div></div>
+  </div>
+
+  <div class="two-col" style="margin-top:22px;">
+    <div>
+      <h2>Visão geral</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td class="b">Data de criação</td><td>15/01/2026</td></tr>
+          <tr><td class="b">Última atualização</td><td>15/04/2026</td></tr>
+          <tr><td class="b">Tempo total de desenvolvimento</td><td>~3 meses (90 dias)</td></tr>
+          <tr><td class="b">Total de atualizações (commits)</td><td>9</td></tr>
+          <tr><td class="b">Chamados envolvidos</td><td>4 (TSK-101, TSK-118, TSK-130, TSK-142)</td></tr>
+          <tr><td class="b">Atualizações de criação / modificação</td><td>1 / 8</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h2>Indicador de retrabalho</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Métrica</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td class="b">Chamados com retorno de validação</td><td>3 de 4 (único sem retorno: TSK-101, criação)</td></tr>
+          <tr><td class="b">Total de retornos</td><td>4 ocorrências (2 chamados anteriores + 2 retornos do TSK-142)</td></tr>
+          <tr><td class="b">Commits vinculados a ciclos de retorno</td><td>5 de 9</td></tr>
+          <tr><td class="b">Ciclo formal de homologação (TSK-142)</td><td>15/03 a 15/04/2026, 2 devoluções em 3 entregas</td></tr>
+          <tr><td class="b">Intervalo médio entre devoluções</td><td>~12 dias</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <h2>Ciclos de retorno de validação</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Ciclo</th><th>Chamado</th><th>Commits</th><th>Retorno de validação?</th><th>Fonte da informação</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>TSK-118</td><td class="mono">a1b2c3d4, b2c3d4e5</td><td>Sim</td><td>Relato do desenvolvedor</td></tr>
+      <tr><td>2</td><td>TSK-130</td><td class="mono">c3d4e5f6</td><td>Sim</td><td>Relato do desenvolvedor</td></tr>
+      <tr class="rel"><td class="b">3, 4</td><td class="b">TSK-142 (2 retornos)</td><td class="mono">d4e5f6a7, e5f6a7b8</td><td class="b">Sim</td><td class="b">Explícito no histórico registrado</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Pontos de atenção</h2>
+  <div class="atencao">
+    <ul>
+      <li><span class="b">Retrabalho distribuído, e não concentrado.</span> O retorno de validação ocorreu em 3 dos 4 chamados. A leitura muda de "homologação difícil no fim" para "alinhamento de requisito frágil desde o início", o que justifica revisar processo, e não só ajustar o painel.</li>
+      <li><span class="b">Metade do retrabalho só existe por relato.</span> 2 dos 4 retornos não têm registro explícito no histórico. Sem o relato, o indicador seria 22%, e não 44%. Registre explicitamente quando uma atualização vem de retorno de validação.</li>
+      <li><span class="b">~12 dias entre devoluções.</span> Cada rodada de validação levou quase duas semanas para voltar. O tempo de ciclo é tanto processo da área de negócio quanto do time de BI.</li>
+    </ul>
+  </div>
+
+  <h2>Linha do tempo</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Data</th><th>Chamado</th><th>Commit</th><th>Resumo</th><th>Ciclo</th><th>Retorno de validação?</th><th>Tipo</th></tr></thead>
+    <tbody>
+      <tr><td>15/01/2026</td><td>TSK-101</td><td class="mono">0a1b2c3d</td><td>Criação do painel no ambiente</td><td>-</td><td>Não</td><td>Novo (criação)</td></tr>
+      <tr class="rel"><td>22/01/2026</td><td>TSK-118</td><td class="mono">a1b2c3d4</td><td>Reestruturação da base de dados que alimenta o painel</td><td class="b">1</td><td class="b">Sim (relato)</td><td>Modificação</td></tr>
+      <tr class="rel"><td>27/01/2026</td><td>TSK-118</td><td class="mono">b2c3d4e5</td><td>Ajuste visual do layout e renomeação de indicadores</td><td class="b">1</td><td class="b">Sim (relato)</td><td>Modificação</td></tr>
+      <tr><td>05/02/2026</td><td>-</td><td class="mono">1b2c3d4e</td><td>Correções pontuais complementares</td><td>-</td><td>Não</td><td>Modificação</td></tr>
+      <tr class="rel"><td>20/02/2026</td><td>TSK-130</td><td class="mono">c3d4e5f6</td><td>Inclusão de nova regional e de um filtro de período</td><td class="b">2</td><td class="b">Sim (relato)</td><td>Modificação</td></tr>
+      <tr><td>02/03/2026</td><td>-</td><td class="mono">2c3d4e5f</td><td>Atualização geral do painel</td><td>-</td><td>Não</td><td>Modificação</td></tr>
+      <tr><td>15/03/2026</td><td>TSK-142</td><td class="mono">3d4e5f6a</td><td>Reestruturação grande e ajustes de validação dos dados (1ª entrega da homologação)</td><td>-</td><td>Não</td><td>Modificação (grande)</td></tr>
+      <tr class="hist"><td>28/03/2026</td><td>TSK-142</td><td class="mono">d4e5f6a7</td><td>Retorno da área de negócio com pontos de ajuste após revisão</td><td class="b">3</td><td class="b">Sim (histórico)</td><td>Ciclo de homologação</td></tr>
+      <tr class="hist"><td>15/04/2026</td><td>TSK-142</td><td class="mono">e5f6a7b8</td><td>Devolutiva final da área de negócio, com ajustes finais</td><td class="b">4</td><td class="b">Sim (histórico)</td><td>Ciclo de homologação</td></tr>
+    </tbody>
+  </table></div>
+  <p class="nota">Linhas destacadas são commits vinculados a ciclos de retorno de validação: tom claro = classificado por relato do desenvolvedor; tom mais escuro = explícito no histórico. A coluna Ciclo liga cada commit à tabela de ciclos acima.</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "id": "caderno-nav",
+  "name": "Atalhos do caderno",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.0",
+  "description": "Barra de atalhos das areas do caderno de trabalho e buscas salvas. Plugin local, nao vem da loja.",
+  "author": "claude-caderno",
+  "isDesktopOnly": false
+}

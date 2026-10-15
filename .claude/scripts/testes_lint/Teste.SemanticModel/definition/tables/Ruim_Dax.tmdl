@@ -1,0 +1,26 @@
+table Ruim_Dax
+
+	measure 'Ruim DAX' =
+			VAR v_receita = SUM ( [Receita] )
+			VAR v_meta = Fact_Vendas[Receita (R$)]
+			var Custo=sum(Fact_Vendas[Custo])
+			VAR v_filtrada = CALCULATE ( [Receita (R$)], REMOVEFILTERS ( Dim_Canal ) )
+			VAR v_razao = DIVIDE ( v_receita - Custo, IF ( v_receita>0, v_receita, BLANK () ) )
+			VAR v_soma =
+			    SUM (
+			        Fact_Vendas[Custo]
+			    )
+			VAR v_topo =
+			    TOPN (
+			        5
+			        , Dim_Cliente
+			      , [Receita (R$)]
+			    )
+			VAR v_tab =	1
+			VAR v_longa = [Receita (R$)] + [Receita (R$)] + [Receita (R$)] + [Receita (R$)] + [Receita (R$)] + 1000
+			  RETURN v_razao
+
+	measure 'Curta' =
+			[Receita (R$)] * 2
+
+	measure 'Inline' = VAR v_x = 1 RETURN v_x

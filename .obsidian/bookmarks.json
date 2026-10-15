@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "type": "file",
+      "ctime": 1787758598639,
+      "path": "PAINEL.md",
+      "title": "Painel"
+    },
+    {
+      "type": "file",
+      "ctime": 1787753890316,
+      "path": "conhecimento/INDICE.md",
+      "title": "Baú de conhecimento"
+    },
+    {
+      "type": "file",
+      "ctime": 1787754469930,
+      "path": "conhecimento/referencias/ROTEAMENTO_FRENTES.md",
+      "title": "Roteamento das frentes"
+    },
+    {
+      "type": "file",
+      "ctime": 1787754515810,
+      "path": "CLAUDE.md",
+      "title": "Regras do sistema"
+    }
+  ]
+}

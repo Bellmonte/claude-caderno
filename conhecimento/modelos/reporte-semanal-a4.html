@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>Resumo semanal</title>
+<!-- Modelo do one-page A4. Paleta neutra (acento #2F6F8F); para usar a identidade da sua
+     empresa, troque as cores aqui e os pares das pílulas na skill reporte-semana. A fonte
+     Archivo é a da calibração de página única: trocar exige conferir /Count 1 de novo. -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap');
+@page { size: A4; margin: 13mm 14mm; }
+* { box-sizing: border-box; }
+html,body { margin:0; }
+body{ font-family:'Archivo',system-ui,sans-serif; background:#FFFFFF; color:#1A2230; line-height:1.4;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.eyebrow{ font-size:11px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:#2F6F8F; }
+h1{ font-weight:900; font-size:34px; line-height:.98; margin:2px 0 0; letter-spacing:-.015em; color:#1A2230; }
+.head{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:3px solid #2F6F8F; padding-bottom:14px; }
+.head .meta{ text-align:right; font-size:12.5px; line-height:1.5; }
+.mut{ color:#6B7585; font-weight:400; }
+.hero{ font-size:16.5px; font-weight:600; line-height:1.35; margin:16px 0 18px; color:#1A2230; }
+.kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:22px; }
+.kpi{ background:#F4F6F8; border:1px solid #E3E7EC; border-radius:8px; padding:12px 14px; }
+.kpi .n{ font-size:26px; font-weight:900; }
+.kpi .l{ font-size:11.5px; color:#6B7585; }
+.block{ margin-bottom:20px; }
+.sec{ font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; margin:0 0 10px; }
+.row{ display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-top:1px solid #E3E7EC; }
+.pill{ flex:0 0 auto; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px; border-radius:4px; margin-top:1px; }
+.row b{ font-weight:700; }
+.chev{ font-weight:900; }
+.foot{ margin-top:22px; padding-top:10px; border-top:1px solid #E3E7EC; font-size:10.5px; color:#A3ABB6; }
+</style></head>
+<body>
+
+<div class="head">
+  <div>
+    <div class="eyebrow">Resumo semanal &middot; {{AREA}}</div>
+    <h1>O que entreguei<br>na semana</h1>
+  </div>
+  <div class="meta">
+    <div style="font-weight:700">{{SEMANA}}</div>
+    <div class="mut">{{NOME}}</div>
+    <div class="mut">{{CARGO}}</div>
+  </div>
+</div>
+
+<div class="hero">{{HERO}}</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="n" style="color:#2F6F8F">{{N_ENTREGUE}}</div><div class="l">Entregas fechadas</div></div>
+  <div class="kpi"><div class="n" style="color:#41557F">{{N_ANDAMENTO}}</div><div class="l">Em andamento</div></div>
+  <div class="kpi"><div class="n" style="color:#B07D1A">{{N_REUNIOES}}</div><div class="l">Reuni&otilde;es</div></div>
+  <div class="kpi"><div class="n" style="color:#B23A2B">{{N_INCIDENTES}}</div><div class="l">Incidentes abertos</div></div>
+</div>
+
+<!--SEC:ENTREGUE-->
+<div class="block">
+  <div class="sec" style="color:#2F6F8F">Entregue: resultado para a &aacute;rea</div>
+  {{ROWS_ENTREGUE}}
+</div>
+<!--/SEC:ENTREGUE-->
+
+<!--SEC:ANDAMENTO-->
+<div class="block">
+  <div class="sec" style="color:#41557F">Em andamento: previs&atilde;o de fechamento</div>
+  {{ROWS_ANDAMENTO}}
+</div>
+<!--/SEC:ANDAMENTO-->
+
+<!--SEC:RISCOS-->
+<div class="block">
+  <div class="sec" style="color:#B23A2B">Riscos e incidentes</div>
+  {{ROWS_RISCOS}}
+</div>
+<!--/SEC:RISCOS-->
+
+<!--SEC:FOCO-->
+<div class="block">
+  <div class="sec" style="color:#6A539D">Pr&oacute;xima semana</div>
+  {{ROWS_FOCO}}
+</div>
+<!--/SEC:FOCO-->
+
+<div class="foot">Gerado a partir do versionamento de {{GERADO_EM}}</div>
+
+</body></html>

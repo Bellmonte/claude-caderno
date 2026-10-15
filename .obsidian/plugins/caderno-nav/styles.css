@@ -1,0 +1,143 @@
+/* Só o estilo da barra mora aqui. O do painel fica em
+ * sistema/scripts/dashboards.css, injetado a quente pela lib, justamente para
+ * ser editável sem reiniciar o Obsidian. */
+
+.workspace-leaf-content[data-type="caderno-nav"] .view-header { display: none; }
+.workspace-leaf-content[data-type="caderno-nav"] .view-content { padding: 6px 8px 16px; }
+
+/* ------------------------------------------------------------------- marca */
+
+.cnav-marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 14px;
+}
+.cnav-sigla {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.cnav-marca-tit { font-size: 13px; font-weight: 600; line-height: 1.2; }
+.cnav-marca-sub {
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 1px;
+}
+
+/* ------------------------------------------------------------------- seção */
+
+.cnav-secao {
+  font-family: var(--font-monospace);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .11em;
+  color: var(--text-faint);
+  padding: 14px 8px 5px;
+}
+
+/* -------------------------------------------------------------------- item */
+
+.cnav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1.3;
+}
+.cnav-item:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+.cnav-item.is-active {
+  background: hsla(var(--accent-h), var(--accent-s), var(--accent-l), .16);
+  color: var(--text-normal);
+  font-weight: 500;
+}
+
+.cnav-ico { display: inline-flex; align-items: center; flex: none; }
+.cnav-ico svg { width: 15px; height: 15px; }
+.cnav-item.is-active .cnav-ico { color: var(--interactive-accent); }
+
+/* ------------------------------------------------------------------ rodapé */
+
+.cnav-rodape {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+/* --------------------------------------------------------------- árvore */
+
+/* a seta ocupa lugar fixo, mesmo nos itens sem árvore, senão o texto dança
+   de posição entre uma linha e outra */
+.cnav-seta {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  width: 13px;
+  margin-left: -3px;
+  color: var(--text-faint);
+  transition: transform .12s ease;
+}
+.cnav-seta svg { width: 13px; height: 13px; }
+.cnav-item.is-aberto > .cnav-seta,
+.cnav-sub-item.is-aberto > .cnav-seta { transform: rotate(90deg); }
+.cnav-seta:hover { color: var(--text-normal); }
+
+/* o recuo cresce sozinho porque cada nível aninha outra .cnav-sub */
+.cnav-sub {
+  margin-left: 11px;
+  padding-left: 7px;
+  border-left: 1px solid var(--background-modifier-border);
+}
+
+.cnav-sub-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 7px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1.3;
+}
+.cnav-sub-item:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+.cnav-sub-item.is-active {
+  background: hsla(var(--accent-h), var(--accent-s), var(--accent-l), .16);
+  color: var(--text-normal);
+}
+.cnav-sub-item .cnav-ico svg { width: 13px; height: 13px; }
+.cnav-sub-item.is-pasta { color: var(--text-normal); }
+
+/* nome longo de demanda não pode empurrar a barra: corta com reticências */
+.cnav-sub-item > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cnav-sub-vazio {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-faint);
+  padding: 4px 8px;
+}
